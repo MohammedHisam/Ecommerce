@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block active %}current-list-item{% endblock %}
+{% block content %}
+    {% load static %}
+
+
+    <!-- home page slider -->
+    <div class="homepage-slider">
+        <!-- single home slider -->
+        <div class="single-homepage-slider homepage-bg-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
+                        <div class="hero-text">
+                            <div class="hero-text-tablecell">
+                                <p class="subtitle">Fresh & Organic</p>
+                                <h1>Delicious Seasonal Fruits</h1>
+                                <div class="hero-btns">
+                                    <a href="#fruits" class="boxed-btn">Fruit Collection</a>
+                                    <a href="#" class="bordered-btn">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- single home slider -->
+        <div class="single-homepage-slider homepage-bg-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1 text-center">
+                        <div class="hero-text">
+                            <div class="hero-text-tablecell">
+                                <p class="subtitle">Fresh Everyday</p>
+                                <h1>100% Organic Collection</h1>
+                                <div class="hero-btns">
+                                    <a href="#fruits" class="boxed-btn">Visit Shop</a>
+                                    <a href="#" class="bordered-btn">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- single home slider -->
+        <div class="single-homepage-slider homepage-bg-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1 text-right">
+                        <div class="hero-text">
+                            <div class="hero-text-tablecell">
+                                <p class="subtitle">Mega Sale Going On!</p>
+                                <h1>Get December Discount</h1>
+                                <div class="hero-btns">
+                                    <a href="#fruits" class="boxed-btn">Visit Shop</a>
+                                    <a href="#" class="bordered-btn">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end home page slider -->
+
+    <!-- product section -->
+    <div id="fruits" class="product-section mt-150 mb-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="section-title">
+                        <h3><span class="orange-text">Our</span> Products</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-filters">
+                        <ul>
+                            {% if request.path == "/" %}
+                                <a href="/" style="color: #FFFF"><li class="active">All</li></a>
+                            {% else %}
+                                <a href="/" style="color: #000000"><li>All</li></a>
+                            {% endif %}
+                            {% for i in category %}
+                                {% if "/"|add:i.slug|add:"/" == request.path %}
+                                   <a href="{{ i.get_url }}" style="color: #FFFF"> <li class="active">{{ i.name }}</li></a>
+                                {% else %}
+                                   <a href="{{ i.get_url }}" style="color: #000000">  <li>{{ i.name }}</li></a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                {% for fruit in pg.object_list %}
+                    <div class="col-lg-4 col-md-6 text-center">
+                        <div class="single-product-item">
+                            <div class="product-image">
+                                <a href="{{ fruit.get_url }}"><img src="{{ fruit.img.url }}" alt=""></a>
+                            </div>
+                            <h3>{{ fruit.name }}</h3>
+                            <p class="product-price"><span>Per Kg</span> {{ fruit.price }}₹ </p>
+                            {% if fruit.id in items %}
+                                <a href="{% url 'cart' %}" class="cart-btn"><i
+                                    class="fas fa-shopping-cart"></i> Go to Cart</a>
+                            {% else %}
+                                <a href="{% url 'addToCart' fruit.id %}" class="cart-btn"><i
+                                    class="fas fa-shopping-cart"></i> Add to Cart</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="pagination-wrap">
+                        <ul>
+                            {% if pg.has_previous %}
+                                <li><a href="?page={{ pg.previous_page_number }}#fruits">Prev</a></li>
+                            {% endif %}
+                            {% for p in pg.paginator.page_range %}
+                                <li><a class="{% if pg.number == p %}active{% endif %}" href="?page={{ p }}#fruits">{{ p }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if pg.has_next %}
+                                <li><a href="?page={{ pg.next_page_number }}#fruits">Next</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end product section -->
+
+{% endblock %}

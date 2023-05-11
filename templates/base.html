@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Django Ecommerce Applpication By Hisam">
+
+    <!-- title -->
+    <title>Fruitkha</title>
+
+
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static  'assets/img/favicon.png' %}">
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="{% static  'assets/css/all.min.css' %}">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="{% static  'assets/bootstrap/css/bootstrap.min.css' %}">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="{% static  'assets/css/owl.carousel.css' %}">
+    <!-- magnific popup -->
+    <link rel="stylesheet" href="{% static  'assets/css/magnific-popup.css' %}">
+    <!-- animate css -->
+    <link rel="stylesheet" href="{% static  'assets/css/animate.css' %}">
+    <!-- mean menu css -->
+    <link rel="stylesheet" href="{% static  'assets/css/meanmenu.min.css' %}">
+    <!-- main style -->
+    <link rel="stylesheet" href="{% static  'assets/css/main.css' %}">
+    <!-- responsive -->
+    <link rel="stylesheet" href="{% static  'assets/css/responsive.css' %}">
+    <!-- Register & Login -->
+    <link rel="stylesheet" href="{% static  'accounts/style.css' %}">
+
+
+</head>
+<body>
+<!--PreLoader-->
+<div class="loader">
+    <div class="loader-inner">
+        <div class="circle"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+
+<!-- Login Form -->
+<div id="login-form" class="box">
+    <h2>Login</h2>
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="inputBox">
+            <input type="text" name="username" required onkeyup="this.setAttribute('value', this.value);" value="">
+            <label>Username</label>
+        </div>
+        <div class="inputBox">
+            <input type="password" name="password" required value=""
+                   onkeyup="this.setAttribute('value', this.value);">
+            <label>Password</label>
+        </div>
+        <input type="submit" name="sign-in" value="Sign In">
+    </form>
+</div>
+<!-- Login Form -->
+
+<!-- Register Form -->
+<div id="register-form" class="box">
+    <h2>Register</h2>
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="inputBox">
+            <input type="text" name="username" required onkeyup="this.setAttribute('value', this.value);" value="">
+            <label>Username</label>
+        </div>
+        <div class="inputBox">
+            <input type="email" name="email" required onkeyup="this.setAttribute('value', this.value);" value="">
+            <label>Email</label>
+        </div>
+        <div class="inputBox">
+            <input type="password" name="password" required onkeyup="this.setAttribute('value', this.value);">
+            <label>Password</label>
+        </div>
+        <div class="inputBox">
+            <input type="password" name="confirm_password" required onkeyup="this.setAttribute('value', this.value);">
+            <label>Confirm Password</label>
+        </div>
+        <input type="submit" name="sign-in" value="Sign In">
+    </form>
+    <div>
+    </div>
+</div>
+<!-- Register Form -->
+
+{% if messages %}
+    <div id="success-alert" class="notification-container">
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <div class="notification alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> {{ message }}
+                </div>
+            {% elif message.tags == 'info' %}
+                <div class="notification alert alert-info alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Info!</strong> {{ message }}
+                </div>
+            {% elif message.tags == 'warning' %}
+                <div class="notification alert alert-warning alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> {{ message }}
+                </div>
+            {% elif message.tags == 'error' %}
+                <div class="notification alert alert-error alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error!</strong> {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- header -->
+<div class="top-header-area" id="sticker">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 text-center">
+                <div class="main-menu-wrap">
+                    <!-- logo -->
+                    <div class="site-logo">
+                        <a href="/">
+                            <img src="{% static  'assets/img/logo.png' %}" alt="">
+                        </a>
+                    </div>
+                    <!-- logo -->
+
+                    <!-- menu start -->
+                    <nav class="main-menu">
+                        <ul>
+                            <li id="home" class="{% block active %}{% endblock %}"><a href="/">Home</a>
+                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="text-capitalize"><a class="text-white">Hai {{ user.username }} :)</a></li>
+                                <li><a href="{% url 'logout' %}">Logout</a></li>
+                            {% else %}
+                                <li id="login"><a onclick="form_open('login')" href="#">Login</a></li>
+                                <li id="register"><a onclick="form_open('register')" href="#">Register</a></li>
+                            {% endif %}
+                            <li>
+                                <div class="header-icons">
+                                    <a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart">
+                                        {% if item_count > 0 %}<sup> {{ item_count }}</sup>{% endif %}</i></a>
+                                    <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                    <div class="mobile-menu"></div>
+                    <!-- menu end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end header -->
+
+<!-- search area -->
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <form action="{% url 'search' %}" method="get">
+                            <h3>Search For:</h3>
+                            <input type="text" placeholder="Keywords" name="q">
+                            <button type="submit">Search <i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search area -->
+
+<span id="body">
+{% block content %}
+{% endblock %}
+
+    <!-- copyright -->
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <p>Copyrights &copy; 2023
+                </p>
+            </div>
+            <div class="col-lg-6 text-right col-md-12">
+                <div class="social-icons">
+                    <ul>
+                        <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- end copyright -->
+</span>
+
+<!-- jquery -->
+<script src="{% static  'assets/js/jquery-1.11.3.min.js' %}"></script>
+<script>
+    $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+        $("#success-alert").slideUp(500);
+    });
+</script>
+<!-- bootstrap -->
+<script src="{% static  'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<!-- count down -->
+<script src="{% static  'assets/js/jquery.countdown.js' %}"></script>
+<!-- isotope -->
+<script src="{% static  'assets/js/jquery.isotope-3.0.6.min.js' %}"></script>
+<!-- waypoints -->
+<script src="{% static  'assets/js/waypoints.js' %}"></script>
+<!-- owl carousel -->
+<script src="{% static  'assets/js/owl.carousel.min.js' %}"></script>
+<!-- magnific popup -->
+<script src="{% static  'assets/js/jquery.magnific-popup.min.js' %}"></script>
+<!-- mean menu -->
+<script src="{% static  'assets/js/jquery.meanmenu.min.js' %}"></script>
+<!-- sticker js -->
+<script src="{% static  'assets/js/sticker.js' %}"></script>
+<!-- main js -->
+<script src="{% static  'assets/js/main.js' %}"></script>
+<!-- Login & Register js -->
+<script src="{% static  'accounts/script.js' %}"></script>
+
+</body>
+</html>
